@@ -1,14 +1,20 @@
 require 'bundler'
 Bundler::GemHelper.install_tasks
-require "rake/testtask"
-require "rake/gempackagetask"
-require "rake/rdoctask"
+require 'rake'
+require 'rake/testtask'
+require 'rake/packagetask'
+require 'rubygems/package_task'
 require "rake/clean"
+require 'rake/rdoctask'
 
 CLEAN << "pkg" << "doc" << "coverage"
 
-Rake::GemPackageTask.new(eval(File.read("disqus.gemspec"))) { |pkg| }
-Rake::TestTask.new(:test) { |t| t.pattern = "test/*_test.rb" }
+task :default => :test
+Rake::TestTask.new(:test) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/*_test.rb'
+  test.verbose = true
+end
 
 Rake::RDocTask.new do |r|
   r.rdoc_dir = "doc"
